@@ -40,7 +40,7 @@ Punch In BIOMETRIC
 - ✅ Work Duration
 - 😴 Break Duration
 - ⏳ Pending Time (with live stopwatch)
--    Estimated Out Time
+- 📅 Estimated Out Time
 - 🔥 Overtime
 
 4. When **Pending Time reaches 0**, confetti 🎊 is triggered.
