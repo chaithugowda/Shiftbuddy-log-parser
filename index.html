@@ -297,51 +297,56 @@
       }
     });
 
-    $('#processBtn').click(() => {
-      const lines = $('#logInput').val().split('\n').map(l => l.trim()).filter(l => l);
-      let timestamps = [];
-      let breakSecs = 0;
+   $('#processBtn').click(() => {
+  clearInterval(stopwatchInterval);
+  $('#resultBox').hide();
+  $('#workTime, #breakTime, #pendingTime, #stopwatch, #estimatedLogout, #overtime').text('');
 
-      for (const line of lines) {
-        if (/Break/i.test(line)) {
-          breakSecs += parseBreakDuration(line);
-          continue;
-        }
-        if (/^\d{1,2}:\d{2}:\d{2}\s?(AM|PM)$/i.test(line)) {
-          const secs = parseTime12Hr(line);
-          if (secs !== null) timestamps.push(secs);
-        }
-      }
+    const lines = $('#logInput').val().split('\n').map(l => l.trim()).filter(l => l);
+      let timestamps = [];
+      let breakSecs = 0;    
+
+  for (const line of lines) {
+    if (/Break/i.test(line)) {
+      breakSecs += parseBreakDuration(line);
+      continue;
+    }
+    if (/^\d{1,2}:\d{2}:\d{2}\s?(AM|PM)$/i.test(line)) {
+      const secs = parseTime12Hr(line);
+      if (secs !== null) timestamps.push(secs);
+    }
+  }
 
       timestamps.sort((a, b) => a - b);
-      let totalWork = 0;
-      for (let i = 0; i + 1 < timestamps.length; i += 2) {
-        if (timestamps[i + 1] > timestamps[i]) {
-          totalWork += (timestamps[i + 1] - timestamps[i]);
-        }
-      }
+  let totalWork = 0;
+  for (let i = 0; i + 1 < timestamps.length; i += 2) {
+    if (timestamps[i + 1] > timestamps[i]) {
+      totalWork += (timestamps[i + 1] - timestamps[i]);
+    }
+  }
 
       const net = totalWork;
-      const pending = Math.max(REQUIRED_WORK_SECS - net, 0);
-      const overtime = Math.max(net - REQUIRED_WORK_SECS, 0);
+  const pending = Math.max(REQUIRED_WORK_SECS - net, 0);
+  const overtime = Math.max(net - REQUIRED_WORK_SECS, 0);
 // Calculate estimated logout time if possible
 let estimatedLogout = '';
-if (pending > 0 && timestamps.length > 0) {
+  if (pending > 0 && timestamps.length > 0) {
   const lastLogoutSec = timestamps[timestamps.length - 1];
 const estLogoutSec = lastLogoutSec + pending;
 estimatedLogout = formatTimeFromSeconds(estLogoutSec);
 
 }
       $('#workTime').text(formatSeconds(net));
-      $('#breakTime').text(formatSeconds(breakSecs));
-      $('#pendingTime').text(pending > 0 ? formatSeconds(pending) : '✅ Done');
-      $('#overtime').text(overtime > 0 ? formatSeconds(overtime) : '0h 00m 00s');
+  $('#breakTime').text(formatSeconds(breakSecs));
+  $('#pendingTime').text(pending > 0 ? formatSeconds(pending) : '✅ Done');
+  $('#overtime').text(overtime > 0 ? formatSeconds(overtime) : '0h 00m 00s');
       $('#stopwatch').text('');
 $('#estimatedLogout').text(estimatedLogout || '—');
-      if (pending > 0) startStopwatch(pending);
-      if (net >= REQUIRED_WORK_SECS) celebrate();
-      $('#resultBox').show();
-    });
+  if (pending > 0) startStopwatch(pending);
+  if (net >= REQUIRED_WORK_SECS) celebrate();
+
+  $('#resultBox').show();
+});
 
     $('#themeToggle').click(() => {
       $('body').toggleClass('light-mode');
