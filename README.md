@@ -43,7 +43,7 @@ Punch In BIOMETRIC
 - 📅 Estimated Out Time
 - 🔥 Overtime
 
-4. When **Pending Time reaches 0**, confetti 🎊 is triggered.
+4. When **Pending Time reaches 0**,  🎊 is triggered.
 
 ---
 
