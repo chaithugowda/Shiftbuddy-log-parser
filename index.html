@@ -298,7 +298,7 @@
     });
 
    $('#processBtn').click(() => {
-  clearInterval(stopwatchInterval);
+  clearInterval(stopwatchInterval);// ✅ stops previous stopwatch
   $('#resultBox').hide();
   $('#workTime, #breakTime, #pendingTime, #stopwatch, #estimatedLogout, #overtime').text('');
 
